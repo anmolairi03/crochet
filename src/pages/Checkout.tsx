@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatPrice, convertToINR } from '../utils/currency';
 import { initiateRazorpayPayment } from '../utils/razorpay';
+import { supabase } from '../lib/supabase';
 
 const Checkout = () => {
   const { items, getTotalPrice, clearCart } = useCart();
@@ -24,14 +25,64 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const createOrderInDatabase = async (orderId: string, paymentResponse: any) => {
+    try {
+      const shippingAddress = {
+        street: formData.address,
+        city: formData.city,
+        state: 'Not specified',
+        postalCode: formData.zipCode,
+        country: formData.country,
+      };
+
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert({
+          order_number: orderId,
+          customer_name: `${formData.firstName} ${formData.lastName}`,
+          customer_email: formData.email,
+          customer_phone: formData.phone,
+          shipping_address: shippingAddress,
+          total_amount: getTotalPrice() + 5.99,
+          payment_status: 'paid',
+          payment_id: paymentResponse.razorpay_payment_id,
+          razorpay_order_id: paymentResponse.razorpay_order_id,
+          razorpay_signature: paymentResponse.razorpay_signature,
+          order_status: 'confirmed',
+        })
+        .select()
+        .single();
+
+      if (orderError) throw orderError;
+
+      const orderItems = items.map(item => ({
+        order_id: orderData.id,
+        product_id: item.product.id,
+        product_name: item.product.name,
+        product_price: item.product.price,
+        quantity: item.quantity,
+        subtotal: item.product.price * item.quantity,
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) throw itemsError;
+
+      return orderData;
+    } catch (error) {
+      console.error('Error creating order in database:', error);
+      throw error;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
 
-    const totalAmount = getTotalPrice() + 5.99; // Subtotal + Shipping
+    const totalAmount = getTotalPrice() + 5.99;
     const amountInINR = convertToINR(totalAmount);
-
-    // Generate a simple order ID (in production, get this from your backend)
     const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     initiateRazorpayPayment(
@@ -46,21 +97,23 @@ const Checkout = () => {
         country: formData.country,
         orderId: orderId,
       },
-      (response) => {
-        // Payment successful
-        setIsProcessing(false);
-        console.log('Payment successful:', response);
-        
-        // In production, verify payment on your backend before clearing cart
-        alert(`Payment Successful! Order ID: ${orderId}\nPayment ID: ${response.razorpay_payment_id}`);
-        clearCart();
-        navigate('/');
+      async (response) => {
+        try {
+          await createOrderInDatabase(orderId, response);
+          setIsProcessing(false);
+          alert(`Payment Successful! Order ID: ${orderId}\nPayment ID: ${response.razorpay_payment_id}`);
+          clearCart();
+          navigate('/');
+        } catch (error) {
+          setIsProcessing(false);
+          console.error('Error saving order:', error);
+          alert('Payment received but there was an error saving your order. Please contact support with your payment ID: ' + response.razorpay_payment_id);
+        }
       },
       (error) => {
-        // Payment failed or cancelled
         setIsProcessing(false);
         console.error('Payment error:', error);
-        
+
         if (error.message && !error.message.includes('cancelled')) {
           alert(`Payment failed: ${error.message}`);
         }

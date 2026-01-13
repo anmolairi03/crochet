@@ -10,6 +10,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.90.1",
     "cors": "^2.8.5",
     "express": "^5.2.1",
     "razorpay": "^2.9.6",

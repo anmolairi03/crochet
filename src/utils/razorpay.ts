@@ -1,5 +1,3 @@
-// Razorpay payment integration utility
-
 declare global {
   interface Window {
     Razorpay: any;
@@ -8,7 +6,7 @@ declare global {
 
 interface RazorpayOptions {
   key: string;
-  amount: number; // Amount in paise (e.g., 100 = ₹1)
+  amount: number;
   currency: string;
   name: string;
   description: string;
@@ -31,13 +29,6 @@ interface RazorpayOptions {
   };
 }
 
-/**
- * Initialize Razorpay payment
- * @param amount - Amount in INR (will be converted to paise)
- * @param orderData - Order information
- * @param onSuccess - Success callback
- * @param onFailure - Failure callback
- */
 export const initiateRazorpayPayment = (
   amount: number,
   orderData: {
@@ -53,18 +44,13 @@ export const initiateRazorpayPayment = (
   onSuccess: (response: any) => void,
   onFailure: (error: any) => void
 ) => {
-  // Check if Razorpay is loaded
   if (!window.Razorpay) {
     console.error('Razorpay SDK not loaded');
     onFailure(new Error('Payment gateway not available. Please refresh the page.'));
     return;
   }
 
-  // Convert amount to paise (multiply by 100)
   const amountInPaise = Math.round(amount * 100);
-
-  // Razorpay key - Replace with your actual Razorpay key
-  // You can get this from Razorpay Dashboard: https://dashboard.razorpay.com/
   const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY || 'rzp_test_YOUR_KEY_HERE';
 
   const options: RazorpayOptions = {
@@ -73,10 +59,9 @@ export const initiateRazorpayPayment = (
     currency: 'INR',
     name: 'Crocsets',
     description: 'Handmade Yarn Creations',
-    image: '/vite.svg', // Add your logo URL here
-    order_id: orderData.orderId, // Optional: if you're creating orders server-side
+    image: '/vite.svg',
+    order_id: orderData.orderId,
     handler: (response) => {
-      // Payment successful
       console.log('Payment successful:', response);
       onSuccess(response);
     },
@@ -92,11 +77,10 @@ export const initiateRazorpayPayment = (
       country: orderData.country,
     },
     theme: {
-      color: '#ec4899', // Pink color matching your theme
+      color: '#ec4899',
     },
     modal: {
       ondismiss: () => {
-        // User closed the payment modal
         onFailure(new Error('Payment cancelled by user'));
       },
     },
@@ -111,19 +95,12 @@ export const initiateRazorpayPayment = (
   }
 };
 
-/**
- * Verify payment signature (should be done on server-side in production)
- * This is a client-side example - in production, verify on your backend
- */
 export const verifyPayment = async (
   razorpayOrderId: string,
   razorpayPaymentId: string,
   razorpaySignature: string
 ): Promise<boolean> => {
-  // In production, this should be done on your backend server
-  // for security reasons. This is just a placeholder.
   try {
-    // Call your backend API to verify the payment
     const response = await fetch('/api/verify-payment', {
       method: 'POST',
       headers: {
@@ -140,7 +117,6 @@ export const verifyPayment = async (
     return data.success === true;
   } catch (error) {
     console.error('Payment verification error:', error);
-    // For demo purposes, return true if verification endpoint doesn't exist
     return true;
   }
 };
