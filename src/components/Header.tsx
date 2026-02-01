@@ -6,16 +6,16 @@ const Header = () => {
   const cartItemCount = getTotalItems();
 
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50 border-b-2 border-pink-200">
+    <header className="bg-gradient-to-r from-babyPink-50 to-babyBlue-50 shadow-lg sticky top-0 z-50 border-b-2 border-babyPurple-200">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-display font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="text-3xl font-display font-bold bg-gradient-to-r from-babyPink-500 to-babyPurple-500 bg-clip-text text-transparent">
               Crocsets
             </div>
-            <span className="text-sm text-purple-600 hidden sm:inline font-cute">
-              Handmade Yarn Creations
+            <span className="text-sm text-babyPurple-600 hidden sm:inline font-hand font-medium">
+              Handmade with Love
             </span>
           </Link>
 
@@ -23,37 +23,37 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-6">
             <Link
               to="/"
-              className="text-purple-700 hover:text-pink-600 transition-colors font-semibold font-cute"
+              className="text-babyPurple-700 hover:text-babyPink-600 transition-colors font-hand font-semibold"
             >
               Home
             </Link>
             <Link
               to="/products"
-              className="text-purple-700 hover:text-pink-600 transition-colors font-semibold font-cute"
+              className="text-babyPurple-700 hover:text-babyPink-600 transition-colors font-hand font-semibold"
             >
               All Products
             </Link>
             <Link
               to="/products/keyrings"
-              className="text-purple-700 hover:text-pink-600 transition-colors font-cute"
+              className="text-babyPurple-700 hover:text-babyPink-600 transition-colors font-hand"
             >
               Keyrings
             </Link>
             <Link
               to="/products/bags"
-              className="text-purple-700 hover:text-pink-600 transition-colors font-cute"
+              className="text-babyPurple-700 hover:text-babyPink-600 transition-colors font-hand"
             >
               Bags
             </Link>
             <Link
               to="/products/flowers"
-              className="text-purple-700 hover:text-pink-600 transition-colors font-cute"
+              className="text-babyPurple-700 hover:text-babyPink-600 transition-colors font-hand"
             >
               Flowers
             </Link>
             <Link
               to="/products/decor"
-              className="text-purple-700 hover:text-pink-600 transition-colors font-cute"
+              className="text-babyPurple-700 hover:text-babyPink-600 transition-colors font-hand"
             >
               Decor
             </Link>
@@ -62,7 +62,7 @@ const Header = () => {
           {/* Cart Icon */}
           <Link
             to="/cart"
-            className="relative flex items-center space-x-2 text-purple-700 hover:text-pink-600 transition-colors"
+            className="relative flex items-center space-x-2 text-babyPurple-700 hover:text-babyPink-600 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -79,11 +79,11 @@ const Header = () => {
               />
             </svg>
             {cartItemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
+              <span className="absolute -top-2 -right-2 bg-gradient-to-r from-babyPink-500 to-babyPurple-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
                 {cartItemCount}
               </span>
             )}
-            <span className="hidden sm:inline font-semibold font-cute">Cart</span>
+            <span className="hidden sm:inline font-hand font-semibold">Cart</span>
           </Link>
         </div>
       </div>

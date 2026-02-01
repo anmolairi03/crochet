@@ -4,29 +4,41 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-pink-50 via-purple-50 to-yellow-50 text-gray-800;
-    font-family: 'Quicksand', sans-serif;
+    @apply bg-gradient-to-br from-babyPink-50 via-beige-50 to-babyBlue-50 text-gray-700;
+    font-family: 'Poppins', sans-serif;
   }
-  
+
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Comfortaa', cursive;
-    color: #7c3aed;
+    font-family: 'Playfair Display', serif;
+    color: #9d89c0;
+  }
+
+  .subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: 1.25rem;
+    font-weight: 700;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold py-2.5 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
-    font-family: 'Nunito', sans-serif;
+    @apply bg-gradient-to-r from-babyPink-400 to-babyPurple-400 hover:from-babyPink-500 hover:to-babyPurple-500 text-white font-semibold py-2.5 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    font-family: 'Poppins', sans-serif;
   }
-  
+
   .btn-secondary {
-    @apply bg-white hover:bg-pink-50 text-purple-600 font-semibold py-2.5 px-8 rounded-full border-2 border-pink-300 transition-all duration-300 transform hover:scale-105 shadow-md;
-    font-family: 'Nunito', sans-serif;
+    @apply bg-white hover:bg-babyBlue-50 text-babyPurple-600 font-semibold py-2.5 px-8 rounded-full border-2 border-babyPurple-200 transition-all duration-300 transform hover:scale-105 shadow-md;
+    font-family: 'Poppins', sans-serif;
   }
-  
+
   .card {
-    @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden;
+    @apply bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-babyBlue-100;
+  }
+
+  .crochet-pattern {
+    background-image:
+      radial-gradient(circle at 2px 2px, rgba(237, 168, 225, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
 
